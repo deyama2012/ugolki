@@ -1244,6 +1244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boardParameters: {fileID: 11400000, guid: 129e3acc5a6c75445bc454e2b8973023, type: 2}
+  movementRule: {fileID: 11400000, guid: a968442c84e51cd43971ca1531a6993e, type: 2}
   _boardGenerator: {fileID: 1730277558}
   _pieceManager: {fileID: 1730277562}
   _moveInfo:

@@ -10,6 +10,7 @@ public class Board : MonoBehaviour
     Piece[,] _grid;
 
     [SerializeField] BoardParameters _boardParameters;
+    [SerializeField] MovementRule movementRule;
     [SerializeField] BoardGenerator _boardGenerator;
     [SerializeField] PiecesCreator _pieceManager;
     [SerializeField] MoveInfo _moveInfo;
@@ -47,7 +48,7 @@ public class Board : MonoBehaviour
             {
                 _moveInfo = new MoveInfo();
                 _moveInfo.piece = piece;
-                _moveInfo.availableDestinations = GetAvailableDestinations(piece);
+                _moveInfo.availableDestinations = movementRule.GetAvailableMoves(piece, _grid);
             }
             else return;
         }
@@ -65,25 +66,6 @@ public class Board : MonoBehaviour
                 ExecuteMove(ref _moveInfo);
             }
         }
-    }
-
-
-    private List<Vector2Int> GetAvailableDestinations(Piece piece)
-    {
-        var availableDestinations = new List<Vector2Int>();
-        Vector2Int origin = piece.Address;
-        Vector2Int[] moveDirections = { Vector2Int.up, Vector2Int.up + Vector2Int.right, Vector2Int.right, Vector2Int.right + Vector2Int.down, Vector2Int.down, Vector2Int.down + Vector2Int.left, Vector2Int.left, Vector2Int.left + Vector2Int.up };
-        foreach (var dir in moveDirections)
-        {
-            var destination = origin + dir;
-            if (IsOutOfBounds(destination) || IsOccupied(destination))
-                continue;
-            availableDestinations.Add(destination);
-        }
-        return availableDestinations;
-
-        bool IsOutOfBounds(Vector2Int address) => address.y < 0 || address.y >= _grid.GetLength(0) || address.x < 0 || address.x >= _grid.GetLength(1);
-        bool IsOccupied(Vector2Int address) => _grid[address.y, address.x] != null;
     }
 
 

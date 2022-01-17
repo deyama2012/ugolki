@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993b62cc7ce262f4baf8e51d55ab98ce, type: 3}
   m_Name: BoardParameters
   m_EditorClassIdentifier: 
-  _squaresPerSide: 8
+  _squaresPerBoardSide: 8
   _squareSize: 1
-  _pieceCountPerPlayer: 3
+  _piecesPerPlayerCampSide: 3

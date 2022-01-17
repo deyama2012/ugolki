@@ -16,8 +16,8 @@ public abstract class MovementRule : ScriptableObject
         Vector2Int.left + Vector2Int.up
     };
 
-    public abstract List<Vector2Int> GetAvailableMoves(Piece piece, Piece[,] grid);
+    public abstract void GetAvailableMoves(MoveInfo moveInfo, Square[,] grid);
 
-    protected bool IsOutOfBounds(Vector2Int address, Piece[,] grid) => address.y < 0 || address.y >= grid.GetLength(0) || address.x < 0 || address.x >= grid.GetLength(1);
-    protected bool IsOccupied(Vector2Int address, Piece[,] grid) => grid[address.y, address.x] != null;
+    protected bool IsOutOfBounds(Vector2Int address, Square[,] grid) => address.y < 0 || address.y >= grid.GetLength(0) || address.x < 0 || address.x >= grid.GetLength(1);
+    protected bool IsOccupied(Vector2Int address, Square[,] grid) => grid[address.y, address.x].IsOccupied;
 }

@@ -12,9 +12,12 @@ public class GameController : MonoBehaviour
     int _activePlayerIndex;
     List<Player> _players;
 
+    public bool InputAllowed { get; private set; }
+
     public Player CurrentPlayer => _players[_activePlayerIndex];
 
     public static event Action<(List<Player> players, int activePlayerIndex)> CurrentPlayerChangedEvent;
+    public static event Action<Player> WinnerDeterminedEvent;
 
 
     private void Start()
@@ -24,17 +27,32 @@ public class GameController : MonoBehaviour
         _players = new List<Player>() { _player1, _player2 };
 
         _board.CreateBoard();
+        _board.CreateCamps(_player1, _player2);
         _board.CreatePieces(_player1, _player2);
         _board.SetDependency(this);
+
+        InputAllowed = true;
 
         CurrentPlayerChangedEvent?.Invoke((_players, _activePlayerIndex));
     }
 
 
-    public void EndOfTurn()
+    public void OnEndOfTurn()
     {
-        _players[_activePlayerIndex].IncrementTurnCount();
-        _activePlayerIndex = (_activePlayerIndex + 1) % _players.Count;
-        CurrentPlayerChangedEvent?.Invoke((_players, _activePlayerIndex));
+        CurrentPlayer.IncrementTurnCount();
+
+        int otherPlayerIndex = (_activePlayerIndex + 1) % _players.Count;
+        Player otherPlayer = _players[otherPlayerIndex];
+
+        if (otherPlayer.Camp.IsCaptured())
+        {
+            InputAllowed = false;
+            WinnerDeterminedEvent?.Invoke(CurrentPlayer);
+        }
+        else
+        {
+            _activePlayerIndex = otherPlayerIndex;
+            CurrentPlayerChangedEvent?.Invoke((_players, _activePlayerIndex));
+        }
     }
 }

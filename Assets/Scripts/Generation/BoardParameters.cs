@@ -6,23 +6,25 @@ using UnityEngine;
 public class BoardParameters : ScriptableObject
 {
     [Range(2, 26)]
-    [SerializeField] private int _squaresPerSide;
-    [SerializeField] private float _squareSize;
+    [SerializeField] private int _squaresPerBoardSide = 8;
+    [SerializeField] private float _squareSize = 1;
 
+    [Tooltip("Number of player pieces on one axis (meaning that actual number of player pieces will be equal to power of two of that number)")]
     [Min(1)]
-    [SerializeField] private int _pieceCountPerPlayer;
+    [SerializeField] private int _piecesPerPlayerCampSide = 3;
 
-    public int SquaresPerSide => _squaresPerSide;
+    public int SquaresPerSide => _squaresPerBoardSide;
     public float SquareSize => _squareSize;
-    public int PieceCountPerPlayer => _pieceCountPerPlayer;
+    public int PiecesPerPlayerCampSide => _piecesPerPlayerCampSide;
 
-    public Vector3 TotalSize => new Vector3(1, 0, 1) * _squaresPerSide * _squareSize;
-    public Vector3 BottomLeftSquareCenter => (-TotalSize + new Vector3(1, 0, 1) * _squareSize) * 0.5f;
+    public Vector3 TotalSize => new Vector3(1, 0, 1) * _squaresPerBoardSide * _squareSize;
+
+    Vector3 BottomLeftSquareCenter => (-TotalSize + new Vector3(1, 0, 1) * _squareSize) * 0.5f;
 
 
     private void OnValidate()
     {
-        _pieceCountPerPlayer = Mathf.Min(_pieceCountPerPlayer, _squaresPerSide / 2);
+        _piecesPerPlayerCampSide = Mathf.Min(_piecesPerPlayerCampSide, _squaresPerBoardSide / 2);
     }
 
 
@@ -36,11 +38,4 @@ public class BoardParameters : ScriptableObject
 
     public Vector3 AddressToWorldPosition(Vector2Int address) =>
         BottomLeftSquareCenter + new Vector3(address.x, 0, address.y) * _squareSize;
-
-
-
-    //public string AddressToString(Vector2Int address)
-    //{
-    //    return $"{BoardGenerator.letters[address.x]}{BoardGenerator.numbers[address.y]}";
-    //}
 }

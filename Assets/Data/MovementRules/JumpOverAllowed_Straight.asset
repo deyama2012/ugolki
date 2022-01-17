@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82f2910b720163641a694c61663758a2, type: 3}
   m_Name: JumpOverAllowed_Straight
   m_EditorClassIdentifier: 
-  jumpDirections: 0
+  _jumpDirections: 0
+  _onlyOneJump: 0

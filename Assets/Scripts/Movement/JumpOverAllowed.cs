@@ -1,75 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Movement Rules/Jump over allowed")]
+[CreateAssetMenu(menuName = "Movement Rules/Jumpover allowed")]
 public class JumpOverAllowed : MovementRule
 {
+    HashSet<Vector2Int> _jumpDirectionsStraight = new HashSet<Vector2Int> { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
+    HashSet<Vector2Int> _jumpDirectionsDiagonal = new HashSet<Vector2Int> { Vector2Int.up + Vector2Int.right, Vector2Int.right + Vector2Int.down, Vector2Int.down + Vector2Int.left, Vector2Int.left + Vector2Int.up };
+
     public enum JumpDirections { Straight, Diagonal }
 
-    [SerializeField] JumpDirections jumpDirections;
+    [SerializeField] JumpDirections _jumpDirections;
 
-    HashSet<Vector2Int> _jumpDirectionsDiagonal = new HashSet<Vector2Int>
-    {
-        Vector2Int.up + Vector2Int.right,
-        Vector2Int.right + Vector2Int.down,
-        Vector2Int.down + Vector2Int.left,
-        Vector2Int.left + Vector2Int.up
-    };
 
-    HashSet<Vector2Int> _jumpDirectionsStraight = new HashSet<Vector2Int>
+    public override void GetAvailableMoves(MoveInfo moveInfo, Square[,] grid)
     {
-        Vector2Int.up,
-        Vector2Int.right,
-        Vector2Int.down,
-        Vector2Int.left
-    };
-
-    public override List<Vector2Int> GetAvailableMoves(Piece piece, Piece[,] grid)
-    {
-        var availableDestinations = new List<Vector2Int>();
-        Vector2Int origin = piece.Address;
+        Vector2Int origin = moveInfo.piece.Address;
         foreach (var dir in _moveDirections)
         {
             var destination = origin + dir;
             if (IsOutOfBounds(destination, grid) || IsOccupied(destination, grid))
                 continue;
-            availableDestinations.Add(destination);
+
+            // Mark as visited (= available) and also store address that led to this address
+            moveInfo.AddAvailableMove(destination, origin);
         }
 
-        var availableViaJumps = AvailableViaJumps(piece, grid);
-        foreach (var address in availableViaJumps)
-        {
-            if (!availableDestinations.Contains(address))
-            {
-                availableDestinations.Add(address);
-            }
-        }
-        return availableDestinations;
+        GetMovesAvailableViaJumps(moveInfo, grid);
     }
 
-    private IEnumerable<Vector2Int> AvailableViaJumps(Piece piece, Piece[,] grid)
+
+    /// <summary>Breadth-first search for squares reachable by jumping over pieces</summary>
+    void GetMovesAvailableViaJumps(MoveInfo moveInfo, Square[,] grid)
     {
-        HashSet<Vector2Int> jumDirections = jumpDirections == JumpDirections.Diagonal ? _jumpDirectionsDiagonal : _jumpDirectionsStraight;
+        HashSet<Vector2Int> jumpDirections = _jumpDirections == JumpDirections.Diagonal ? _jumpDirectionsDiagonal : _jumpDirectionsStraight;
 
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-
-        Vector2Int origin = piece.Address;
-
-        visited.Add(origin);
+        Vector2Int origin = moveInfo.piece.Address;
         queue.Enqueue(origin);
+        moveInfo.AddAvailableMove(origin, null);
 
         while (queue.Count > 0)
         {
-            var node = queue.Dequeue();
+            var square = queue.Dequeue();
 
-            if (IsOutOfBounds(node, grid))
+            if (IsOutOfBounds(square, grid))
                 continue;
 
-            foreach (var dir in jumDirections)
+            foreach (var dir in jumpDirections)
             {
-                var neighbourClose = node + dir;
+                var neighbourClose = square + dir;
 
                 // Not interested if out of bounds or DOESN'T have a piece (= no piece to jump over)
                 if (IsOutOfBounds(neighbourClose, grid) || !IsOccupied(neighbourClose, grid))
@@ -78,14 +59,14 @@ public class JumpOverAllowed : MovementRule
                 var neighbourFar = neighbourClose + dir;
 
                 // Not interested if out of bounds or DOES have a piece (= we can't jump to this square) or already visited
-                if (IsOutOfBounds(neighbourFar, grid) || IsOccupied(neighbourFar, grid) || visited.Contains(neighbourFar))
+                if (IsOutOfBounds(neighbourFar, grid) || IsOccupied(neighbourFar, grid) || moveInfo.IsVisited(neighbourFar))
                     continue;
 
-                visited.Add(neighbourFar);
                 queue.Enqueue(neighbourFar);
+
+                // Mark as visited (= available) and also store address that led to this address
+                moveInfo.AddAvailableMove(neighbourFar, square);
             }
         }
-
-        return visited;
     }
 }

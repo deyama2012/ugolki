@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 
-public class BoardGenerator : MonoBehaviour
+public class BoardCreator : MonoBehaviour
 {
     [SerializeField] Square _whiteSquarePrefab;
     [SerializeField] Square _blackSquarePrefab;
@@ -18,19 +18,19 @@ public class BoardGenerator : MonoBehaviour
     public static List<string> letters;
 
 
-    public void GenerateBoard(BoardParameters boardParameters)
+    public void GenerateBoard(Square[,] grid, BoardParameters boardParameters)
     {
         _boardParams = boardParameters;
 
         numbers = new List<string>(Enumerable.Range(1, _boardParams.SquaresPerSide).Select(i => i.ToString()));
         letters = new List<string>(Enumerable.Range(65, _boardParams.SquaresPerSide).Select(i => ((char)i).ToString()));
 
-        GenerateSquares();
+        GenerateSquares(grid);
         GenerateBorders();
     }
 
 
-    private void GenerateSquares()
+    private void GenerateSquares(Square[,] grid)
     {
         var squaresContainer = new GameObject("Squares").transform;
         squaresContainer.SetParent(transform);
@@ -44,9 +44,11 @@ public class BoardGenerator : MonoBehaviour
                 int extraOffset = _boardParams.SquaresPerSide % 2 == 0 ? z % 2 : 0;    // Switch starting color if number of squares per board side is even 
                 int prefabIndex = (z * _boardParams.SquaresPerSide + x + extraOffset) % 2;
 
-                Vector3 pos = _boardParams.BottomLeftSquareCenter + new Vector3(x, 0, z) * _boardParams.SquareSize;
+                var pos = _boardParams.AddressToWorldPosition(new Vector2Int(x, z));
                 var square = Instantiate(prefabs[prefabIndex], pos, Quaternion.identity, squaresContainer);
-                square.SetAddress(new Vector2Int(x, z));
+                square.AssignAddress(new Vector2Int(x, z));
+
+                grid.Set(square.Address, square);
             }
         }
     }

@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour
         _board.CreateCamps(_player1, _player2);
         _board.CreatePieces(_player1, _player2);
         _board.SetDependency(this);
+        _board.DetermineMovementRules();
 
         InputAllowed = true;
 

@@ -9,12 +9,13 @@ public class Board : MonoBehaviour
     Square[,] _grid;
 
     [SerializeField] BoardParameters _boardParameters;
-    [SerializeField] MovementRule movementRule;
+    [SerializeField] MovementRule _movementRule;
     [SerializeField] BoardCreator _boardCreator;
     [SerializeField] CampsCreator _campsCreator;
     [SerializeField] PiecesCreator _piecesCreator;
     [SerializeField] MoveInfo _moveInfo;
 
+    public static event Action<Action<MovementRule>> MovementRulesRequest;
     public static event Action<List<Vector3>> HighlightRefreshRequestEvent;
 
 
@@ -42,6 +43,17 @@ public class Board : MonoBehaviour
     public void SetDependency(GameController gameController) => _gameController = gameController;
 
 
+    /// <summary>Ask if we need to change predefined movement rules (will have no effect if main menu scene is not loaded)</summary>
+    public void DetermineMovementRules()
+    {
+        MovementRulesRequest?.Invoke(Callback);
+        void Callback(MovementRule movementRule)
+        {
+            _movementRule = movementRule;
+        }
+    }
+
+
     public void OnPieceSelectionChanged(Piece piece)
     {
         if (!_gameController.InputAllowed) return;
@@ -51,7 +63,7 @@ public class Board : MonoBehaviour
             {
                 _moveInfo = new MoveInfo();
                 _moveInfo.piece = piece;
-                _moveInfo.GetAvailableMoves(_grid, movementRule);
+                _moveInfo.GetAvailableMoves(_grid, _movementRule);
             }
             else return;
         }

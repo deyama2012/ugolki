@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Camp
+public class Camp : MonoBehaviour
 {
-    [SerializeField] Player _owner;
-    [SerializeField] List<Square> _squares;
+    Player _owner;
+    List<Square> _squares;
 
     public Player Owner => _owner;
 
@@ -19,7 +18,7 @@ public class Camp
         }
     }
 
-    public Camp(List<Square> squares, Player owner)
+    public void Init(List<Square> squares, Player owner)
     {
         _squares = squares;
         _owner = owner;

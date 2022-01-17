@@ -6,9 +6,9 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
     BoardParameters _boardParams;
+    Player _owner;
 
     [SerializeField] Vector2Int _address;
-    [SerializeField] Player _owner;
     [SerializeField] float _moveDuration = 0.2f;
     [SerializeField] float _jumpHeight = 0.5f;
 

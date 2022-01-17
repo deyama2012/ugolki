@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PiecesCreator : MonoBehaviour
 {
-    [SerializeField] Piece _whitePiecePrefab;
-    [SerializeField] Piece _blackPiecePrefab;
+    [SerializeField] string _whitePieceResourcePath;
+    [SerializeField] string _blackPieceResourcePath;
 
     BoardParameters _boardParams;
 
@@ -16,11 +17,15 @@ public class PiecesCreator : MonoBehaviour
         var container = new GameObject("Pieces").transform;
         container.SetParent(transform);
 
+        var _whitePiecePrefab = Resources.Load<Piece>(_whitePieceResourcePath);
+        var _blackPiecePrefab = Resources.Load<Piece>(_blackPieceResourcePath);
+
         (List<Piece>, List<Piece>) playersPieces;
         playersPieces.Item1 = PopulateCamp(container, camp1, _whitePiecePrefab);
         playersPieces.Item2 = PopulateCamp(container, camp2, _blackPiecePrefab);
         return playersPieces;
     }
+
 
     private List<Piece> PopulateCamp(Transform container, Camp camp, Piece piecePrefab)
     {

@@ -7,6 +7,8 @@ public class CampsCreator : MonoBehaviour
 {
     BoardParameters _boardParams;
 
+    [SerializeField] Camp _campPrefab;
+
     public void CreateCamps(Square[,] grid, Player player1, Player player2, BoardParameters boardParams)
     {
         _boardParams = boardParams;
@@ -14,12 +16,16 @@ public class CampsCreator : MonoBehaviour
         // Start at the bottom left corner and increment x and y indices
         Vector2Int bottomLeftSquareAddress = Vector2Int.zero;
         var squares1 = GetCampSquares(grid, bottomLeftSquareAddress, Vector2Int.one);
-        player1.AssignCamp(new Camp(squares1, player1));
+        var camp1 = Instantiate(_campPrefab, player1.transform);
+        camp1.Init(squares1, player1);
+        player1.AssignCamp(camp1);
 
         // Start at the top right corner and decrement x and y indices
         Vector2Int topRightSquareAddress = Vector2Int.one * (_boardParams.SquaresPerSide - 1);
         var squares2 = GetCampSquares(grid, topRightSquareAddress, -Vector2Int.one);
-        player2.AssignCamp(new Camp(squares2, player2));
+        var camp2 = Instantiate(_campPrefab, player2.transform);
+        camp2.Init(squares2, player2);
+        player2.AssignCamp(camp2);
     }
 
     private List<Square> GetCampSquares(Square[,] grid, Vector2Int startAddress, Vector2Int moveDir)

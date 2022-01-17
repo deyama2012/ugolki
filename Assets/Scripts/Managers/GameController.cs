@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField] Board _board;
+    [SerializeField] Player _playerPrefab;
     [SerializeField] Player _player1;
     [SerializeField] Player _player2;
 
@@ -22,8 +23,12 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        _player1 = new Player("White Player");
-        _player2 = new Player("Black Player");
+        _player1 = Instantiate(_playerPrefab, transform);
+        _player1.SetName("White Player");
+
+        _player2 = Instantiate(_playerPrefab, transform);
+        _player2.SetName("Black Player");
+
         _players = new List<Player>() { _player1, _player2 };
 
         _board.CreateBoard();

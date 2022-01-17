@@ -8,6 +8,7 @@ public class MainMenuController : MonoBehaviour
 {
     [SerializeField] string gameScene;
     [SerializeField] string gameUIScene;
+
     [SerializeField] GameObject mainMenuRoot;
     [SerializeField] Button startGameButton;
 
@@ -20,8 +21,14 @@ public class MainMenuController : MonoBehaviour
     private void StartButtonClicked_EventHandler()
     {
         mainMenuRoot.SetActive(false);
-        SceneManager.LoadScene(gameScene, LoadSceneMode.Additive);
-        SceneManager.LoadScene(gameUIScene, LoadSceneMode.Additive);
+        var op = SceneManager.LoadSceneAsync(gameUIScene, LoadSceneMode.Additive);
+        op.completed += GameUISceneLoadedComlete_EventHandler;
+    }
+
+    // Loading Game scene after GameUI scene to make sure GameUI scene properly handles first CurrentPlayerChangedEvent event 
+    private void GameUISceneLoadedComlete_EventHandler(AsyncOperation obj)
+    {
+        SceneManager.LoadSceneAsync(gameScene, LoadSceneMode.Additive);
     }
 
     private void RestartButtonClicked_EventHandler()

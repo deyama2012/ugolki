@@ -152,62 +152,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _board: {fileID: 1730277559}
-  _player1:
-    _name: 
-    _turnCount: 0
-    _camp:
-      _owner:
-        _name: 
-        _turnCount: 0
-        _camp:
-          _owner:
-            _name: 
-            _turnCount: 0
-            _camp:
-              _owner:
-                _name: 
-                _turnCount: 0
-                _camp:
-                  _owner:
-                    _name: 
-                    _turnCount: 0
-                    _camp:
-                      _owner:
-                        _name: 
-                        _turnCount: 0
-                      _squares: []
-                  _squares: []
-              _squares: []
-          _squares: []
-      _squares: []
-  _player2:
-    _name: 
-    _turnCount: 0
-    _camp:
-      _owner:
-        _name: 
-        _turnCount: 0
-        _camp:
-          _owner:
-            _name: 
-            _turnCount: 0
-            _camp:
-              _owner:
-                _name: 
-                _turnCount: 0
-                _camp:
-                  _owner:
-                    _name: 
-                    _turnCount: 0
-                    _camp:
-                      _owner:
-                        _name: 
-                        _turnCount: 0
-                      _squares: []
-                  _squares: []
-              _squares: []
-          _squares: []
-      _squares: []
+  _playerPrefab: {fileID: 53765173819830819, guid: a2f33db517b82454ba023df58c398b65,
+    type: 3}
+  _player1: {fileID: 0}
+  _player2: {fileID: 0}
 --- !u!4 &352311058
 Transform:
   m_ObjectHideFlags: 0
@@ -594,6 +542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d13959b1df1800245b66c5bfb1d2be8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _campPrefab: {fileID: 7341468189995914597, guid: 61562902524466c41b40d6df717b83cd,
+    type: 3}
 --- !u!114 &1730277562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -606,10 +556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96d14130dc3c1647abc0b0a07d2bb42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _whitePiecePrefab: {fileID: 479227328738546390, guid: d70ac3f8cec8f2f438f2978b82365f49,
-    type: 3}
-  _blackPiecePrefab: {fileID: 1719121887983425836, guid: ad81e25a2523adb4694eff0e6025c992,
-    type: 3}
+  _whitePieceResourcePath: Pieces/PieceWhite (Variant)
+  _blackPieceResourcePath: Pieces/PieceBlack
 --- !u!1001 &1003625492917421423
 PrefabInstance:
   m_ObjectHideFlags: 0

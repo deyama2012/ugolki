@@ -1900,9 +1900,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementRules:
-  - {fileID: 11400000, guid: b2240a649c1991e4fb5100cf03fed410, type: 2}
   - {fileID: 11400000, guid: a968442c84e51cd43971ca1531a6993e, type: 2}
   - {fileID: 11400000, guid: 56a1173eddd435e48b197d64760f7803, type: 2}
+  - {fileID: 11400000, guid: b2240a649c1991e4fb5100cf03fed410, type: 2}
   _movementRuleDropdown: {fileID: 673930137}
 --- !u!1 &1691867942
 GameObject:

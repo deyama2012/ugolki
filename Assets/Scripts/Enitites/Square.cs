@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Square : MonoBehaviour
 {
+    Piece _occupiedBy;
     [SerializeField] Vector2Int _address;
-    [SerializeField] Piece _occupiedBy;
 
     public Vector2Int Address => _address;
 

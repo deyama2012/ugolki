@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class Player
+public class Player : MonoBehaviour
 {
+    Camp _camp;
+
     [SerializeField] string _name;
     [SerializeField] int _turnCount;
-    [SerializeField] Camp _camp;
 
     public string Name => _name;
     public int TurnCount => _turnCount;
     public Camp Camp => _camp;
 
-    public Player(string name) => _name = name;
+    public void SetName(string name) => _name = name;
 
     public void AssignCamp(Camp camp) => _camp = camp;
 

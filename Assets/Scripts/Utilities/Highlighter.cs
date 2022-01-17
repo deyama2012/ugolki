@@ -37,4 +37,9 @@ public class Highlighter : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        Board.HighlightRefreshRequestEvent -= BoardHighlightRefreshRequest_EventHandler;
+    }
 }

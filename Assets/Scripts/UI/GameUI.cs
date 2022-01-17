@@ -2,24 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using System;
 
-public class UI : MonoBehaviour
+public class GameUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _currentPlayerLabel;
+    [SerializeField] GameObject _victoryLabelWrapper;
     [SerializeField] TextMeshProUGUI _victoryLabel;
-
     [SerializeField] PlayerTurnCountUI _turnCountUI_Player1;
     [SerializeField] PlayerTurnCountUI _turnCountUI_Player2;
-
+    [SerializeField] Button _restartButton;
 
     PlayerTurnCountUI[] _turnCountUIs;
+
+    public static event Action RestartButtonClickedEvent;
 
 
     void Awake()
     {
         _turnCountUIs = new PlayerTurnCountUI[] { _turnCountUI_Player1, _turnCountUI_Player2 };
+        _victoryLabelWrapper.SetActive(false);
 
-        _victoryLabel.gameObject.SetActive(false);
+        _restartButton.onClick.AddListener(() =>
+        {
+            _victoryLabelWrapper.SetActive(false);
+            gameObject.SetActive(false);
+            RestartButtonClickedEvent?.Invoke();
+        });
 
         GameController.CurrentPlayerChangedEvent += CurrentPlayerChanged_EventHandler;
         GameController.WinnerDeterminedEvent += WinnerDetermined_EventHandler;
@@ -28,7 +38,7 @@ public class UI : MonoBehaviour
 
     private void WinnerDetermined_EventHandler(Player player)
     {
-        _victoryLabel.gameObject.SetActive(true);
+        _victoryLabelWrapper.SetActive(true);
         _victoryLabel.text = $"{player.Name} won!";
     }
 

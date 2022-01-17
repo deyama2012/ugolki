@@ -35,4 +35,10 @@ public class InputManager : MonoBehaviour
             _board.DebugLogGrid();
         }
     }
+
+    private void OnDestroy()
+    {
+        Piece.PieceClickedEvent -= PieceClicked_EventHandler;
+        Square.SquareClickedEvent -= SquareClicked_EventHandler;
+    }
 }
